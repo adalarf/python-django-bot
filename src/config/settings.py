@@ -12,21 +12,29 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 
+import environ
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+env = environ.Env()
+environ.Env.read_env(BASE_DIR / ".env")
+
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-06&&*q-i#ym#au_ie$lqxwj^g)l7xy9mj=##5lbp5$+4g632gp"
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG") == "True"
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
+TELEGRAM_TOKEN = env("TELEGRAM_TOKEN")
 
 # Application definition
 
@@ -76,8 +84,12 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": env("ENGINE"),
+        "NAME": env("NAME"),
+        "HOST": env("HOST"),
+        "USER": env("USER"),
+        "PASSWORD": env("PASSWORD"),
+        "POST": env("POST"),
     }
 }
 
