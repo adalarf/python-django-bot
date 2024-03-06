@@ -11,9 +11,6 @@ createsuperuser:
 collectstatic:
 	python src/manage.py collectstatic --no-input
 
-dev:
-	python src/manage.py runserver localhost:8000
-
 command:
 	python src/manage.py ${c}
 
@@ -37,5 +34,20 @@ check_lint:
 	flake8 --config setup.cfg
 	black --check --config pyproject.toml .
 
-start_bot:
+local_start_app:
+	python src/manage.py runserver 0.0.0.0:8000
+
+local_start_bot:
 	python src/manage.py start_bot
+
+start_app:
+	docker-compose up -d app --build
+
+stop_app:
+	docker-compose stop app
+
+start_bot:
+	docker-compose up -d bot --build
+
+stop_bot:
+	docker-compose stop bot

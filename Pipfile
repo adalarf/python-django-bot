@@ -12,6 +12,7 @@ black = "~=21.12b0"
 isort = "~=5.10"
 flake8 = "~=4.0"
 python-telegram-bot = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.10"
