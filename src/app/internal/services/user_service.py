@@ -1,5 +1,6 @@
 from app.internal.models.user import User
 from asgiref.sync import sync_to_async
+from .message_service import Message
 import re
 
 
@@ -24,10 +25,8 @@ async def set_phone_from_user(user: User, user_phone_number: int) -> None:
 async def get_user_info(user_id: int) -> list|str:
     user = await get_user(user_id)
     if user.phone_number is None:
-        return "Для просмотра информации о профиле введите номер телефона"
-    return f"Ваш id - {user.id}\n" \
-           f"Ваше имя - {user.name}\n" \
-           f"Ваш номер телефона - {user.phone_number}"
+        return Message.phone_required_message()
+    return Message.user_info_message(user)
 
 
 def validate_phone(phone: str) -> bool:
