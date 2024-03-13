@@ -19,6 +19,7 @@ build:
     - job:build
   only:
     - master
+    - hw3
   environment:
     name: prod
 
@@ -29,6 +30,7 @@ lint:
     - job:lint
   only:
     - master
+    - hw3
   environment:
     name: prod
 
@@ -39,6 +41,7 @@ test:
     - job:test
   only:
     - master
+    - hw3
   environment:
     name: prod
 
@@ -50,6 +53,7 @@ deploy:
     - job:deploy
   only:
     - master
+    - hw3
   environment:
     name: prod
   when: manual
