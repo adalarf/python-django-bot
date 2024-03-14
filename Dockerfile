@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 
 COPY Pipfile Pipfile.lock ./
 
-RUN PIP_NO_CACHE_DIR=off pip install pipenv && \
-    PIP_NO_CACHE_DIR=off pipenv install --system --deploy
+RUN pip install pipenv && \
+    pipenv install --system --deploy --no-cache-dir
 
 COPY . .
