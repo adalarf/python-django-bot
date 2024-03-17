@@ -2,6 +2,7 @@ from app.internal.models.user import User
 from app.internal.models.checking_account import CheckingAccount
 from app.internal.models.card import Card
 
+
 class Message:
     @staticmethod
     def name_added_to_db_message(user: User):

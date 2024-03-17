@@ -22,7 +22,7 @@ async def set_phone_from_user(user: User, user_phone_number: int) -> None:
     await user.asave()
 
 
-async def get_user_info(user_id: int) -> list|str:
+async def get_user_info(user_id: int) -> list | str:
     user = await get_user(user_id)
     if user.phone_number is None:
         return Message.phone_required_message()
