@@ -1,33 +1,46 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:14.2-alpine
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
     container_name: db
     env_file:
       - .env
     ports:
-      - 5432:5432
+      - 5432:${POST}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres.ubvicyzthpojmpslhfox -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   app:
+    image: ${IMAGE_APP}
     container_name: app
     build: .
     command: python src/manage.py runserver 0.0.0.0:8000
     ports:
-      - 8000:8000
+      - 8000:${PORT_APP}
     env_file:
       - .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   bot:
+    image: ${IMAGE_APP}
     build: .
     container_name: bot
     command: python src/manage.py start_bot
     env_file:
       - .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   pgdata:

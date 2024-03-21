@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator
 
 
 class CheckingAccount(models.Model):
-    account_number = models.DecimalField(primary_key=True, max_digits=20, decimal_places=0,
-                                         validators=[MinValueValidator(10000000000000000000)])
+    id = models.IntegerField(primary_key=True)
+    account_number = models.CharField(max_length=20, unique=True)
     owner = models.ForeignKey(User, on_delete=models.PROTECT)
+    balance = models.DecimalField(max_digits=20, decimal_places=2, default=0)

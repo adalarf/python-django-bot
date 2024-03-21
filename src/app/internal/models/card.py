@@ -4,9 +4,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Card(models.Model):
-    card_number = models.DecimalField(primary_key=True, max_digits=16, decimal_places=0,
-                                      validators=[MinValueValidator(1000000000000000)])
-    balance = models.FloatField()
+    id = models.IntegerField(primary_key=True)
+    card_number = models.CharField(max_length=16, unique=True)
     expiration_date = models.DateField()
-    cvv_code = models.IntegerField(validators=[MinValueValidator(100), MaxValueValidator(999)])
+    cvv_code = models.CharField(max_length=3)
     checking_account = models.ForeignKey(CheckingAccount, on_delete=models.PROTECT)

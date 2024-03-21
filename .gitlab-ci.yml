@@ -1,0 +1,59 @@
+image: docker/compose:alpine-1.29.2
+
+stages:
+  - build
+  - lint
+  - test
+  - deploy
+
+before_script:
+  - apk add make
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  - cp $DOT_ENV $(pwd)/.env
+
+build:
+  stage: build
+  script:
+    - make build
+  tags:
+    - job:build
+  only:
+    - master
+    - hw3
+  environment:
+    name: prod
+
+lint:
+  stage: lint
+  script: make lint
+  tags:
+    - job:lint
+  only:
+    - master
+    - hw3
+  environment:
+    name: prod
+
+test:
+  stage: test
+  script: echo "test"
+  tags:
+    - job:test
+  only:
+    - master
+    - hw3
+  environment:
+    name: prod
+
+deploy:
+  stage: deploy
+  script:
+    - make down migrate up
+  tags:
+    - job:deploy
+  only:
+    - master
+    - hw3
+  environment:
+    name: prod
+  when: manual

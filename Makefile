@@ -1,33 +1,33 @@
 migrate:
-	python src/manage.py migrate $(if $m, api $m,)
+	docker-compose run --rm python src/manage.py migrate $(if $m, api $m,)
 
 makemigrations:
-	python src/manage.py makemigrations
-	sudo chown -R ${USER} src/app/migrations/
+	docker-compose run --rm python src/manage.py makemigrations
+	docker-compose run app bash -c "sudo chown -R ${USER} src/app/migrations/"
 
 createsuperuser:
-	python src/manage.py createsuperuser
+	docker-compose run --rm python src/manage.py createsuperuser
 
 collectstatic:
-	python src/manage.py collectstatic --no-input
+	docker-compose run --rm python src/manage.py collectstatic --no-input
 
 command:
 	python src/manage.py ${c}
 
 shell:
-	python src/manage.py shell
+	docker-compose run --rm python src/manage.py shell
 
 debug:
-	python src/manage.py debug
+	docker-compose run --rm python src/manage.py debug
 
 piplock:
 	pipenv install
 	sudo chown -R ${USER} Pipfile.lock
 
 lint:
-	isort .
-	flake8 --config setup.cfg
-	black --config pyproject.toml .
+	docker-compose run app bash -c "isort ."
+	docker-compose run app bash -c "flake8 --config setup.cfg"
+	docker-compose run app bash -c "black --config pyproject.toml ."
 
 check_lint:
 	isort --check --diff .
@@ -51,3 +51,12 @@ start_bot:
 
 stop_bot:
 	docker-compose stop bot
+
+up:
+	docker-compose up -d
+
+down:
+	docker-compose down
+
+build:
+	docker-compose build

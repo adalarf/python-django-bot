@@ -1,13 +1,12 @@
 FROM python:3.10-slim-buster
 
-ENV PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=off
+ENV PYTHONUNBUFFERED=1
 
 WORKDIR /usr/src/app
 
 COPY Pipfile Pipfile.lock ./
 
 RUN pip install pipenv && \
-    pipenv install --system --deploy
+    PIP_NO_CACHE_DIR=off pipenv install --system --deploy
 
 COPY . .
