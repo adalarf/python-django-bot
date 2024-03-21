@@ -85,3 +85,7 @@ class Message:
     @staticmethod
     def transaction_successful_message():
         return "Транзакция выполнена"
+
+    @staticmethod
+    def none_favorites_message():
+        return "Пользователей в избранном нет"

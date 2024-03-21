@@ -41,15 +41,14 @@ async def get_favorite_user(favorite_name: str) -> str | User:
     return favorite_user
 
 
-async def add_favorite_user(user_id: int, favorite_name: str) -> str:
+async def add_user_to_favorite_list(user_id: int, favorite_name: str):
     favorite_user = await get_favorite_user(favorite_name)
     user = await get_user(user_id)
     await user.favorite_users.aadd(favorite_user)
     await user.asave()
-    return Message.added_favorite_user_message()
 
 
-async def delete_favorite_user(user_id: int, favorite_name: str) -> str:
+async def delete_user_from_favorite_list(user_id: int, favorite_name: str) -> str:
     favorite_user = await get_favorite_user(favorite_name)
     user = await get_user(user_id)
     await user.favorite_users.aremove(favorite_user)
@@ -62,7 +61,10 @@ async def is_favorite(user: User, favorite_user: User) -> bool:
     return favorite_user
 
 
-async def get_favorite_users(user_id: int):
+async def get_favorite_users_list(user_id: int):
     user = await get_user(user_id)
     favorite_users = user.favorite_users.all()
+    is_empty = await favorite_users.aexists()
+    if not is_empty:
+        return Message.none_favorites_message()
     return favorite_users

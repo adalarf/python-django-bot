@@ -1,6 +1,7 @@
 from telegram import Update
 from telegram.ext import CallbackContext
-from app.internal.services.user_service import update_or_create_user, get_user, set_phone_from_user, validate_phone, get_user_info
+from app.internal.services.user_service import update_or_create_user, get_user, set_phone_from_user, validate_phone,\
+    get_user_info, add_user_to_favorite_list, delete_user_from_favorite_list, get_favorite_users_list
 from app.internal.services.bank_service import try_get_card_balance, try_get_checking_account_balance, transfer_by_checking_account
 from app.internal.services.message_service import Message
 
@@ -61,3 +62,29 @@ async def transfer_money_by_checking_account(update: Update, context: CallbackCo
     money_amount = context.args[2]
     await transfer_by_checking_account(user_account, favorite_account, money_amount)
     await update.message.reply_text(Message.transaction_successful_message())
+
+
+async def add_favorite_user(update: Update, context: CallbackContext):
+    user = update.effective_user
+    favorite_name = context.args[0]
+    await add_user_to_favorite_list(user.id, favorite_name)
+    await update.message.reply_text(Message.added_favorite_user_message())
+
+
+async def delete_favorite_user(update: Update, context: CallbackContext) -> None:
+    user = update.effective_user
+    favorite_name = context.args[0]
+    await delete_user_from_favorite_list(user.id, favorite_name)
+    await update.message.reply_text(Message.deleted_favorite_user_message())
+
+
+async def get_favorite_users(update: Update, context: CallbackContext) -> None:
+    user = update.effective_user
+    favorites = await get_favorite_users_list(user.id)
+    if favorites == Message.none_favorites_message():
+        await update.message.reply_text(favorites)
+    else:
+        message = ""
+        async for favorite in favorites:
+            message += f"{favorite.name}"
+        await update.message.reply_text(message)
