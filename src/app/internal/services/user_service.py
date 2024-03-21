@@ -32,3 +32,37 @@ async def get_user_info(user_id: int) -> list | str:
 def validate_phone(phone: str) -> bool:
     phone_number_pattern = r"^(\+.)?\d{10}$"
     return re.fullmatch(phone_number_pattern, phone) is not None
+
+
+async def get_favorite_user(favorite_name: str) -> str | User:
+    favorite_user = await User.objects.filter(name=favorite_name).afirst()
+    if not favorite_user:
+        return Message.user_not_found_message()
+    return favorite_user
+
+
+async def add_favorite_user(user_id: int, favorite_name: str) -> str:
+    favorite_user = await get_favorite_user(favorite_name)
+    user = await get_user(user_id)
+    await user.favorite_users.aadd(favorite_user)
+    await user.asave()
+    return Message.added_favorite_user_message()
+
+
+async def delete_favorite_user(user_id: int, favorite_name: str) -> str:
+    favorite_user = await get_favorite_user(favorite_name)
+    user = await get_user(user_id)
+    await user.favorite_users.aremove(favorite_user)
+    await user.asave()
+    return Message.deleted_favorite_user_message()
+
+
+async def is_favorite(user: User, favorite_user: User) -> bool:
+    favorite_user = user.favorite_users.filter(user__id=favorite_user.id).afirst()
+    return favorite_user
+
+
+async def get_favorite_users(user_id: int):
+    user = await get_user(user_id)
+    favorite_users = user.favorite_users.all()
+    return favorite_users
