@@ -2,7 +2,8 @@ from telegram import Update
 from telegram.ext import CallbackContext
 from app.internal.services.user_service import update_or_create_user, get_user, set_phone_from_user, validate_phone,\
     get_user_info, add_user_to_favorite_list, delete_user_from_favorite_list, get_favorite_users_list
-from app.internal.services.bank_service import try_get_card_balance, try_get_checking_account_balance, transfer_by_checking_account
+from app.internal.services.bank_service import try_get_card_balance, try_get_checking_account_balance,\
+    transfer_by_checking_account, transfer_by_name
 from app.internal.services.message_service import Message
 
 
@@ -54,6 +55,12 @@ async def get_checking_account_balance(update: Update, context: CallbackContext)
     else:
         checking_account = await try_get_checking_account_balance(account_number)
         await update.message.reply_text(checking_account)
+
+
+async def transfer_money_by_name(update: Update, context: CallbackContext) -> None:
+    favorite_name = context.args[0]
+    favorite_accounts = await transfer_by_name(favorite_name)
+    await update.message.reply_text(Message.favorite_accounts_message(favorite_accounts))
 
 
 async def transfer_money_by_checking_account(update: Update, context: CallbackContext) -> None:

@@ -41,7 +41,7 @@ async def get_favorite_user(favorite_name: str) -> str | User:
     return favorite_user
 
 
-async def add_user_to_favorite_list(user_id: int, favorite_name: str):
+async def add_user_to_favorite_list(user_id: int, favorite_name: str) -> None:
     favorite_user = await get_favorite_user(favorite_name)
     user = await get_user(user_id)
     await user.favorite_users.aadd(favorite_user)
@@ -57,11 +57,11 @@ async def delete_user_from_favorite_list(user_id: int, favorite_name: str) -> st
 
 
 async def is_favorite(user: User, favorite_user: User) -> bool:
-    favorite_user = user.favorite_users.filter(user__id=favorite_user.id).afirst()
-    return favorite_user
+    is_favorite_user = await user.favorite_users.filter(id=favorite_user.id).aexists()
+    return is_favorite_user
 
 
-async def get_favorite_users_list(user_id: int):
+async def get_favorite_users_list(user_id: int) -> str | User:
     user = await get_user(user_id)
     favorite_users = user.favorite_users.all()
     is_empty = await favorite_users.aexists()
