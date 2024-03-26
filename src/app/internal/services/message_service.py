@@ -61,3 +61,35 @@ class Message:
     @staticmethod
     def card_not_fount_message():
         return "Карта с указанным номером не найдена в базе данных"
+
+    @staticmethod
+    def user_not_found_message():
+        return "Пользователь не найден"
+
+    @staticmethod
+    def added_favorite_user_message():
+        return "Пользователь добавлен в избранное"
+
+    @staticmethod
+    def deleted_favorite_user_message():
+        return "Пользователь удален из избранного"
+
+    @staticmethod
+    def user_is_not_favorite_message():
+        return "Пользователя нет в избранном"
+
+    @staticmethod
+    def transfer_successful_message():
+        return "Деньги переведены"
+
+    @staticmethod
+    def transaction_successful_message():
+        return "Транзакция выполнена"
+
+    @staticmethod
+    def none_favorites_message():
+        return "Пользователей в избранном нет"
+
+    @staticmethod
+    def favorite_accounts_message(favorite_accounts: CheckingAccount):
+        return f"Рассчетные счета пользователя: {favorite_accounts}"

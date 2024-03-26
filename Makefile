@@ -34,6 +34,12 @@ check_lint:
 	flake8 --config setup.cfg
 	black --check --config pyproject.toml .
 
+push:
+	docker-compose push
+
+pull:
+	docker-compose pull
+
 local_start_app:
 	python src/manage.py runserver 0.0.0.0:8000
 
