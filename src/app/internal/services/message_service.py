@@ -91,5 +91,5 @@ class Message:
         return "Пользователей в избранном нет"
 
     @staticmethod
-    def favorite_accounts_message(favorite_accounts: CheckingAccount):
+    def favorite_accounts_message(favorite_accounts: list):
         return f"Рассчетные счета пользователя: {favorite_accounts}"
