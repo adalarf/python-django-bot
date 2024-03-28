@@ -29,7 +29,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG") == "True"
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "https://adalarf.backend24.2tapp.cc"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "http://adalarf.backend24.2tapp.cc"]
 
 TELEGRAM_TOKEN = env("TELEGRAM_TOKEN")
 
