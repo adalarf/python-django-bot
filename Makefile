@@ -34,6 +34,9 @@ check_lint:
 	flake8 --config setup.cfg
 	black --check --config pyproject.toml .
 
+test:
+	docker-compose run --rm app bash -c "cd src/tests && python -m pytest"
+
 push:
 	docker-compose push
 
