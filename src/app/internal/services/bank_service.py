@@ -27,13 +27,18 @@ async def try_get_checking_account_balance(account_number: str) -> str:
         return Message.checking_account_not_fount_message()
 
 
+def get_user_checking_accounts(favorite: User) -> list:
+    favorite_accounts = CheckingAccount.objects.filter(owner=favorite)
+    favorite_accounts = [i.account_number for i in favorite_accounts]
+    return favorite_accounts
+
+
 @sync_to_async
 def transfer_by_name(favorite_name: str) -> str:
     favorite = User.objects.filter(name=favorite_name).first()
     if not favorite:
         return Message.user_not_found_message()
-    favorite_accounts = CheckingAccount.objects.filter(owner=favorite)
-    favorite_accounts = [i.account_number for i in favorite_accounts]
+    favorite_accounts = get_user_checking_accounts(favorite)
     return Message.favorite_accounts_message(favorite_accounts)
 
 

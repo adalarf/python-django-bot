@@ -4,6 +4,7 @@ from app.internal.services.message_service import Message
 from tests.utils import make_async_to_sync
 
 
+@pytest.mark.unit
 @pytest.mark.django_db
 def test_get_checking_account_balance(create_first_account):
     account_number = create_first_account.account_number
@@ -11,6 +12,7 @@ def test_get_checking_account_balance(create_first_account):
     assert checking_account == Message.checking_account_balance_message(create_first_account)
 
 
+@pytest.mark.unit
 @pytest.mark.django_db
 def test_get_card_balance(create_first_card):
     card_number = create_first_card.card_number

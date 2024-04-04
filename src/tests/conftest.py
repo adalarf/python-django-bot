@@ -2,7 +2,7 @@ import pytest
 from app.internal.models.user import User
 from app.internal.models.checking_account import CheckingAccount
 from app.internal.models.card import Card
-import decimal
+from decimal import Decimal
 
 
 @pytest.fixture(scope="function")
@@ -21,13 +21,17 @@ def create_user_without_phone(name="test_name3"):
 
 
 @pytest.fixture(scope="function")
-def create_first_account(create_first_user, acccount_number="12345123451234512345", balance=decimal.Decimal("100.00").quantize(decimal.Decimal("0.01"))):
-    return CheckingAccount.objects.create(id=5, account_number=acccount_number, owner=create_first_user, balance=balance)
+def create_first_account(create_first_user, acccount_number="12345123451234512345",
+                         balance=Decimal("100.00").quantize(Decimal("0.01"))):
+    return CheckingAccount.objects.create(id=5, account_number=acccount_number,
+                                          owner=create_first_user, balance=balance)
 
 
 @pytest.fixture(scope="function")
-def create_second_account(create_second_user, account_number="02345123451234512345", balance=decimal.Decimal("100.00").quantize(decimal.Decimal("0.01"))):
-    return CheckingAccount.objects.create(id=6, account_number=account_number, owner=create_second_user, balance=balance)
+def create_second_account(create_second_user, account_number="02345123451234512345",
+                          balance=Decimal("100.00").quantize(Decimal("0.01"))):
+    return CheckingAccount.objects.create(id=6, account_number=account_number,
+                                          owner=create_second_user, balance=balance)
 
 
 @pytest.fixture(scope="function")
