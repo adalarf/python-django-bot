@@ -19,8 +19,7 @@ build:
     - job:build
   only:
     - master
-    - hw3
-    - hw4
+    - /^hw[0-9]+/
   environment:
     name: prod
 
@@ -31,20 +30,18 @@ lint:
     - job:lint
   only:
     - master
-    - hw3
-    - hw4
+    - /^hw[0-9]+/
   environment:
     name: prod
 
 test:
   stage: test
-  script: echo "test"
+  script: make pull test
   tags:
     - job:test
   only:
     - master
-    - hw3
-    - hw4
+    - /^hw[0-9]+/
   environment:
     name: prod
 
@@ -56,8 +53,7 @@ deploy:
     - job:deploy
   only:
     - master
-    - hw3
-    - hw4
+    - /^hw[0-9]+/
   environment:
     name: prod
   when: manual

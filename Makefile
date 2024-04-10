@@ -1,24 +1,24 @@
 migrate:
-	docker-compose run --rm python src/manage.py migrate $(if $m, api $m,)
+	docker-compose run --rm app python src/manage.py migrate $(if $m, api $m,)
 
 makemigrations:
-	docker-compose run --rm python src/manage.py makemigrations
+	docker-compose run --rm app python src/manage.py makemigrations
 	docker-compose run app bash -c "sudo chown -R ${USER} src/app/migrations/"
 
 createsuperuser:
-	docker-compose run --rm python src/manage.py createsuperuser
+	docker-compose run --rm app python src/manage.py createsuperuser
 
 collectstatic:
-	docker-compose run --rm python src/manage.py collectstatic --no-input
+	docker-compose run --rm app python src/manage.py collectstatic --no-input
 
 command:
 	python src/manage.py ${c}
 
 shell:
-	docker-compose run --rm python src/manage.py shell
+	docker-compose run --rm app python src/manage.py shell
 
 debug:
-	docker-compose run --rm python src/manage.py debug
+	docker-compose run --rm app python src/manage.py debug
 
 piplock:
 	pipenv install
@@ -33,6 +33,9 @@ check_lint:
 	isort --check --diff .
 	flake8 --config setup.cfg
 	black --check --config pyproject.toml .
+
+test:
+	docker-compose run --rm app bash -c "cd src/tests && python -m pytest"
 
 push:
 	docker-compose push

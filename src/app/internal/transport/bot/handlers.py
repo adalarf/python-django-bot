@@ -60,7 +60,7 @@ async def get_checking_account_balance(update: Update, context: CallbackContext)
 async def transfer_money_by_name(update: Update, context: CallbackContext) -> None:
     favorite_name = context.args[0]
     favorite_accounts = await transfer_by_name(favorite_name)
-    await update.message.reply_text(Message.favorite_accounts_message(favorite_accounts))
+    await update.message.reply_text(favorite_accounts)
 
 
 async def transfer_money_by_checking_account(update: Update, context: CallbackContext) -> None:

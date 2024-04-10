@@ -1,3 +1,5 @@
+import decimal
+
 from django.db import transaction
 
 from app.internal.models.checking_account import CheckingAccount
@@ -25,30 +27,37 @@ async def try_get_checking_account_balance(account_number: str) -> str:
         return Message.checking_account_not_fount_message()
 
 
-def transfer_by_name(favorite_name: str) -> CheckingAccount:
-    favorite = User.objects.filter(name=favorite_name).first()
-    if not favorite:
-        return Message.user_not_found_message()
+def get_user_checking_accounts(favorite: User) -> list:
     favorite_accounts = CheckingAccount.objects.filter(owner=favorite)
+    favorite_accounts = [i.account_number for i in favorite_accounts]
     return favorite_accounts
 
 
-async def transfer_by_checking_account(user_account: str, favorite_account: str, money_amount: float) -> str:
-    favorite_account = await CheckingAccount.objects.filter(account_number=favorite_account).afirst()
-    user_account = await CheckingAccount.objects.filter(account_number=user_account).afirst()
+@sync_to_async
+def transfer_by_name(favorite_name: str) -> str:
+    favorite = User.objects.filter(name=favorite_name).first()
+    if not favorite:
+        return Message.user_not_found_message()
+    favorite_accounts = get_user_checking_accounts(favorite)
+    return Message.favorite_accounts_message(favorite_accounts)
+
+
+@sync_to_async
+def transfer_by_checking_account(user_account: str, favorite_account: str, money_amount: decimal.Decimal) -> str:
+    favorite_account = CheckingAccount.objects.filter(account_number=favorite_account).first()
+    user_account = CheckingAccount.objects.filter(account_number=user_account).first()
     if not favorite_account or not user_account:
         return Message.checking_account_not_fount_message()
-    if not await is_favorite(user_account.owner, favorite_account.owner):
+    if not is_favorite(user_account.owner, favorite_account.owner):
         return Message.user_is_not_favorite_message()
     else:
         make_transfer(user_account, favorite_account, money_amount)
         return Message.transfer_successful_message()
 
 
-@sync_to_async
 @transaction.atomic
-def make_transfer(user_account: CheckingAccount, favorite_account: CheckingAccount, money_amount: float) -> None:
-    user_account.balance -= money_amount
-    favorite_account.balance += money_amount
+def make_transfer(user_account: CheckingAccount, favorite_account: CheckingAccount, money_amount: decimal.Decimal) -> None:
+    user_account.balance -= decimal.Decimal(money_amount)
+    favorite_account.balance += decimal.Decimal(money_amount)
     user_account.save()
     favorite_account.save()

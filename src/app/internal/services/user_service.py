@@ -56,8 +56,8 @@ async def delete_user_from_favorite_list(user_id: int, favorite_name: str) -> st
     return Message.deleted_favorite_user_message()
 
 
-async def is_favorite(user: User, favorite_user: User) -> bool:
-    is_favorite_user = await user.favorite_users.filter(id=favorite_user.id).aexists()
+def is_favorite(user: User, favorite_user: User) -> bool:
+    is_favorite_user = user.favorite_users.filter(id=favorite_user.id).exists()
     return is_favorite_user
 
 
