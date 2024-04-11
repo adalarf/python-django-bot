@@ -30,7 +30,7 @@ def test_get_card_balance(create_first_card):
 
 @pytest.mark.unit
 @pytest.mark.django_db
-def test_get_card_balance():
+def test_get_does_not_exist_card_balance():
     card_number = "0004567812345678"
     card = make_async_to_sync(try_get_card_balance(card_number))
     assert card == Message.card_not_fount_message()
