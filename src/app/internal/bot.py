@@ -20,11 +20,11 @@ def start_bot():
     app.add_handler(CommandHandler("delete_favorite", delete_favorite_user))
     app.add_handler(CommandHandler("favorites", get_favorite_users))
 
-    # app.run_polling()
+    app.run_polling()
 
-    app.run_webhook(
-        listen="0.0.0.0",
-        port=8000,
-        webhook_url="https://adalarf.backend24.2tapp.cc/bot",
-        url_path="bot"
-    )
+    # app.run_webhook(
+    #     listen="0.0.0.0",
+    #     port=8000,
+    #     webhook_url="https://adalarf.backend24.2tapp.cc/bot",
+    #     url_path="bot"
+    # )
