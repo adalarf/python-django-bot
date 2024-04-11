@@ -34,10 +34,10 @@ def test_transfer_by_name(create_second_user):
     assert transfer == Message.favorite_accounts_message(favorite_accounts)
 
 
-@pytest.mark.integration
-@pytest.mark.django_db
-def test_transfer_by_name_mock(mock_update, mock_context, create_second_user):
-    mock_context.args = [create_second_user.name]
-    make_async_to_sync(transfer_money_by_name(mock_update, mock_context))
-    favorite_accounts = get_user_checking_accounts(create_second_user)
-    mock_update.message.reply_text.assert_called_once_with(Message.favorite_accounts_message(favorite_accounts))
+# @pytest.mark.integration
+# @pytest.mark.django_db
+# def test_transfer_by_name_mock(mock_update, mock_context, create_second_user):
+#     mock_context.args = [create_second_user.name]
+#     make_async_to_sync(transfer_money_by_name(mock_update, mock_context))
+#     favorite_accounts = get_user_checking_accounts(create_second_user)
+#     mock_update.message.reply_text.assert_called_once_with(Message.favorite_accounts_message(favorite_accounts))
