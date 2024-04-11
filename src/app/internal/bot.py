@@ -28,4 +28,3 @@ def start_bot():
         webhook_url="https://adalarf.backend24.2tapp.cc/bot",
         url_path="bot"
     )
-
