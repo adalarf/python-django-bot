@@ -39,7 +39,7 @@ def transfer_by_name(favorite_name: str) -> str:
     if not favorite:
         return Message.user_not_found_message()
     favorite_accounts = get_user_checking_accounts(favorite)
-    return Message.favorite_accounts_message(favorite_accounts)
+    return favorite_accounts
 
 
 @sync_to_async
