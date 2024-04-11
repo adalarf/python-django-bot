@@ -14,7 +14,23 @@ def test_get_checking_account_balance(create_first_account):
 
 @pytest.mark.unit
 @pytest.mark.django_db
+def test_get_does_not_exist_checking_account_balance():
+    account_number = "00045678901234567890"
+    checking_account = make_async_to_sync(try_get_checking_account_balance(account_number))
+    assert checking_account == Message.checking_account_not_fount_message()
+
+
+@pytest.mark.unit
+@pytest.mark.django_db
 def test_get_card_balance(create_first_card):
     card_number = create_first_card.card_number
     card = make_async_to_sync(try_get_card_balance(card_number))
     assert card == Message.card_balance_message(create_first_card)
+
+
+@pytest.mark.unit
+@pytest.mark.django_db
+def test_get_card_balance():
+    card_number = "0004567812345678"
+    card = make_async_to_sync(try_get_card_balance(card_number))
+    assert card == Message.card_not_fount_message()
