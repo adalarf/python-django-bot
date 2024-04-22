@@ -67,22 +67,26 @@ async def transfer_money_by_checking_account(update: Update, context: CallbackCo
     user_account = context.args[0]
     favorite_account = context.args[1]
     money_amount = context.args[2]
-    await transfer_by_checking_account(user_account, favorite_account, money_amount)
-    await update.message.reply_text(Message.transaction_successful_message())
+    transfer = await transfer_by_checking_account(user_account, favorite_account, money_amount)
+    await update.message.reply_text(transfer)
 
 
 async def add_favorite_user(update: Update, context: CallbackContext):
     user = update.effective_user
     favorite_name = context.args[0]
-    await add_user_to_favorite_list(user.id, favorite_name)
-    await update.message.reply_text(Message.added_favorite_user_message())
+    if await add_user_to_favorite_list(user.id, favorite_name) != Message.user_not_found_message():
+        await update.message.reply_text(Message.added_favorite_user_message())
+    else:
+        await update.message.reply_text(Message.user_not_found_message())
 
 
 async def delete_favorite_user(update: Update, context: CallbackContext) -> None:
     user = update.effective_user
     favorite_name = context.args[0]
-    await delete_user_from_favorite_list(user.id, favorite_name)
-    await update.message.reply_text(Message.deleted_favorite_user_message())
+    if await delete_user_from_favorite_list(user.id, favorite_name) != Message.user_not_found_message():
+        await update.message.reply_text(Message.deleted_favorite_user_message())
+    else:
+        await update.message.reply_text(Message.user_not_found_message())
 
 
 async def get_favorite_users(update: Update, context: CallbackContext) -> None:
