@@ -43,6 +43,8 @@ async def get_favorite_user(favorite_name: str) -> str | User:
 
 async def add_user_to_favorite_list(user_id: int, favorite_name: str) -> None:
     favorite_user = await get_favorite_user(favorite_name)
+    if favorite_user == Message.user_not_found_message():
+        return Message.user_not_found_message()
     user = await get_user(user_id)
     await user.favorite_users.aadd(favorite_user)
     await user.asave()
@@ -50,6 +52,8 @@ async def add_user_to_favorite_list(user_id: int, favorite_name: str) -> None:
 
 async def delete_user_from_favorite_list(user_id: int, favorite_name: str) -> str:
     favorite_user = await get_favorite_user(favorite_name)
+    if favorite_user == Message.user_not_found_message():
+        return Message.user_not_found_message()
     user = await get_user(user_id)
     await user.favorite_users.aremove(favorite_user)
     await user.asave()
