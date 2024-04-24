@@ -1,6 +1,7 @@
 from app.internal.models.user import User
 from app.internal.models.checking_account import CheckingAccount
 from app.internal.models.card import Card
+from app.internal.models.transaction import Transaction
 
 
 class Message:
@@ -93,3 +94,12 @@ class Message:
     @staticmethod
     def favorite_accounts_message(favorite_accounts: list):
         return f"Рассчетные счета пользователя: {favorite_accounts}"
+
+    @staticmethod
+    def interacted_users_message(transactions: list):
+        return f"Транзакции" \
+               f""
+
+    @staticmethod
+    def statement_message(statement: list):
+        return f"Выписка {statement}"

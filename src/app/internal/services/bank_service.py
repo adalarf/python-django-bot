@@ -1,13 +1,16 @@
 import decimal
 
 from django.db import transaction
+from django.db.models import Q
 
 from app.internal.models.checking_account import CheckingAccount
 from app.internal.models.card import Card
 from app.internal.models.user import User
+from app.internal.models.transaction import Transaction
 from asgiref.sync import sync_to_async
 from .message_service import Message
 from .user_service import is_favorite, get_user
+from datetime import datetime, date
 
 
 @sync_to_async
@@ -61,3 +64,26 @@ def make_transfer(user_account: CheckingAccount, favorite_account: CheckingAccou
     favorite_account.balance += decimal.Decimal(money_amount)
     user_account.save()
     favorite_account.save()
+    Transaction.objects.create(sender_account=user_account, receiver_account=favorite_account,
+                               money_amount=money_amount, datetime=datetime.now())
+
+
+@sync_to_async
+def get_checking_account_statement(account_number: str, date_start: datetime, date_end: datetime):
+    checking_account = CheckingAccount.objects.get(account_number=account_number)
+    transactions = Transaction.objects.filter(sender_account=checking_account,
+                                              datetime__gte=date_start,
+                                              datetime__lte=date_end
+                                              ).values("receiver_account__account_number", "money_amount", "datetime")
+    return list(transactions)
+
+
+@sync_to_async
+def get_interacted_users(account_number: list) -> list:
+    checking_account = CheckingAccount.objects.get(account_number=account_number)
+    transactions = Transaction.objects.filter(Q(sender_account=checking_account)
+                                              | Q(receiver_account=checking_account)).select_related(
+                                              "sender_account", "receiver_account"
+                                              )
+
+    return list(transactions)
