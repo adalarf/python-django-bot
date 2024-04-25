@@ -8,4 +8,4 @@ class Card(models.Model):
     card_number = models.CharField(max_length=16, unique=True)
     expiration_date = models.DateField()
     cvv_code = models.CharField(max_length=3)
-    checking_account = models.ForeignKey(CheckingAccount, on_delete=models.PROTECT)
+    checking_account = models.ForeignKey(CheckingAccount, on_delete=models.PROTECT, db_index=True)
