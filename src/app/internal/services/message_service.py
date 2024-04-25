@@ -93,13 +93,23 @@ class Message:
 
     @staticmethod
     def favorite_accounts_message(favorite_accounts: list):
-        return f"Рассчетные счета пользователя: {favorite_accounts}"
+        return f"Рассчетные счета пользователя: {[i['account_number'] for i in favorite_accounts]}"
 
     @staticmethod
     def interacted_users_message(transactions: list):
-        return f"Транзакции" \
-               f""
+        message = ""
+        for i in transactions:
+            message += f"От {i['sender_account__account_number']} К {i['receiver_account__account_number']}\n" \
+                       f"Сумма: {i['money_amount']} Дата: {i['datetime'].strftime('%d-%m-%Y')}\n" \
+                       f"--------------------------\n"
+        return message
 
     @staticmethod
     def statement_message(statement: list):
-        return f"Выписка {statement}"
+        message = ""
+        for i in statement:
+            message += f"Дата: {i['datetime'].strftime('%d-%m-%Y')} " \
+                       f"Получатель: {i['receiver_account__account_number']}\n" \
+                       f"Сумма: {i['money_amount']}\n" \
+                       f"--------------------------\n"
+        return message
