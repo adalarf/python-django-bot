@@ -22,11 +22,11 @@ def start_bot():
     app.add_handler(CommandHandler("statement", get_account_statement))
     app.add_handler(CommandHandler("interacted", get_users_interacted_with))
 
-    # app.run_polling()
+    app.run_polling()
 
-    app.run_webhook(
-        listen="0.0.0.0",
-        port=8000,
-        webhook_url="https://adalarf.backend24.2tapp.cc/bot",
-        url_path="bot"
-    )
+    # app.run_webhook(
+    #     listen="0.0.0.0",
+    #     port=8000,
+    #     webhook_url="https://adalarf.backend24.2tapp.cc/bot",
+    #     url_path="bot"
+    # )
