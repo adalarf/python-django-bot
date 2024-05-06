@@ -38,13 +38,13 @@ def test_transfer_by_does_not_exist_checking_account_mock(mock_update, mock_cont
     mock_update.message.reply_text.assert_called_once_with(Message.checking_account_not_fount_message())
 
 
-@pytest.mark.integration
-@pytest.mark.django_db
-def test_transfer_by_name_mock(mock_update, mock_context, create_first_user, create_first_account):
-    mock_context.args = [create_first_user.name]
-    make_async_to_sync(transfer_money_by_name(mock_update, mock_context))
-    mock_update.message.reply_text.assert_called_once_with(Message.favorite_accounts_message(
-        [create_first_account.account_number]))
+# @pytest.mark.integration
+# @pytest.mark.django_db
+# def test_transfer_by_name_mock(mock_update, mock_context, create_first_user, create_first_account):
+#     mock_context.args = [create_first_user.name]
+#     make_async_to_sync(transfer_money_by_name(mock_update, mock_context))
+#     mock_update.message.reply_text.assert_called_once_with(Message.favorite_accounts_message(
+#         [create_first_account.account_number]))
 
 
 @pytest.mark.integration

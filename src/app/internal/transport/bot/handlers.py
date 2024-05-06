@@ -3,7 +3,7 @@ from telegram.ext import CallbackContext
 from app.internal.services.user_service import update_or_create_user, get_user, set_phone_from_user, validate_phone,\
     get_user_info, add_user_to_favorite_list, delete_user_from_favorite_list, get_favorite_users_list
 from app.internal.services.bank_service import try_get_card_balance, try_get_checking_account_balance,\
-    transfer_by_checking_account, transfer_by_name
+    transfer_by_checking_account, transfer_by_name, get_checking_account_statement, get_interacted_users
 from app.internal.services.message_service import Message
 
 
@@ -99,3 +99,19 @@ async def get_favorite_users(update: Update, context: CallbackContext) -> None:
         async for favorite in favorites:
             message += f"{favorite.name}"
         await update.message.reply_text(message)
+
+
+async def get_account_statement(update: Update, context: CallbackContext) -> None:
+    checking_account = context.args[0]
+    date_start = context.args[1]
+    date_end = context.args[2]
+    statement = await get_checking_account_statement(checking_account, date_start, date_end)
+    statement = list(statement)
+    await update.message.reply_text(Message.statement_message(statement))
+
+
+async def get_users_interacted_with(update: Update, context: CallbackContext) -> None:
+    checking_account = context.args[0]
+    interacted_users = await get_interacted_users(checking_account)
+    interacted_users_list = list(interacted_users)
+    await update.message.reply_text(Message.interacted_users_message(interacted_users_list))
