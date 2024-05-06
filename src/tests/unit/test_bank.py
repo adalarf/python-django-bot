@@ -37,8 +37,8 @@ def test_get_does_not_exist_card_balance():
     assert card == Message.card_not_fount_message()
 
 
-# @pytest.mark.unit
-# @pytest.mark.django_db
-# def test_get_user_checking_accounts(create_first_account, create_first_user):
-#     favorite_accounts = get_user_checking_accounts(create_first_user)
-#     assert favorite_accounts == [create_first_account.account_number]
+@pytest.mark.unit
+@pytest.mark.django_db
+def test_get_user_checking_accounts(create_first_account, create_first_user):
+    favorite_accounts = get_user_checking_accounts(create_first_user.id)
+    assert list(favorite_accounts)[0]["account_number"] == create_first_account.account_number

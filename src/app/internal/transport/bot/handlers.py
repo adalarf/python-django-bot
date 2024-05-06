@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import CallbackContext
 from app.internal.services.user_service import update_or_create_user, get_user, set_phone_from_user, validate_phone,\
-    get_user_info, add_user_to_favorite_list, delete_user_from_favorite_list, get_favorite_users_list
+    get_user_info, add_user_to_favorite_list, delete_user_from_favorite_list, get_favorite_users_list, set_user_password
 from app.internal.services.bank_service import try_get_card_balance, try_get_checking_account_balance,\
     transfer_by_checking_account, transfer_by_name, get_checking_account_statement, get_interacted_users
 from app.internal.services.message_service import Message
@@ -31,6 +31,16 @@ async def set_phone(update: Update, context: CallbackContext) -> None:
 async def get_info(update: Update, context: CallbackContext) -> None:
     user_info = await get_user_info(update.effective_user.id)
     await update.message.reply_text(user_info)
+
+
+async def set_password(update: Update, context: CallbackContext) -> None:
+    if len(context.args) != 1:
+        await update.message.reply_text(Message.password_not_provided_message())
+        return
+    password = context.args[0]
+    user = update.effective_user.id
+    await set_user_password(user, password)
+    await update.message.reply_text(Message.password_is_set_message())
 
 
 async def get_card_balance(update: Update, context: CallbackContext) -> None:
@@ -105,6 +115,9 @@ async def get_account_statement(update: Update, context: CallbackContext) -> Non
     checking_account = context.args[0]
     date_start = context.args[1]
     date_end = context.args[2]
+    if date_start > date_end:
+        await update.message.reply_text("Дата начала не может быть позже даты окончания")
+        return
     statement = await get_checking_account_statement(checking_account, date_start, date_end)
     statement = list(statement)
     await update.message.reply_text(Message.statement_message(statement))
