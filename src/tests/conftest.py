@@ -1,7 +1,6 @@
 import pytest
-from app.internal.models.user import User
-from app.internal.models.checking_account import CheckingAccount
-from app.internal.models.card import Card
+from app.internal.users.db.models import User
+from app.internal.bank.db.models import CheckingAccount, Card
 from decimal import Decimal
 
 
