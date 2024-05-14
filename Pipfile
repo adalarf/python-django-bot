@@ -16,6 +16,8 @@ pytest = "~=8.1.1"
 pytest-django = "~=4.8.0"
 pytest-asyncio = "~=0.23.6"
 python-telegram-bot = {extras = ["webhooks"], version = "*"}
+pyjwt = "*"
+django-ninja = "*"
 
 [requires]
 python_version = "3.10"

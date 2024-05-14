@@ -3,3 +3,4 @@ from app.internal.models.user import User
 from app.internal.models.checking_account import CheckingAccount
 from app.internal.models.card import Card
 from app.internal.models.transaction import Transaction
+from app.internal.models.issued_token import IssuedToken

@@ -38,7 +38,7 @@ def transfer_by_name(favorite_name: str) -> str:
     favorite_id = User.objects.filter(name=favorite_name).values("id").first()
     if not favorite_id:
         return Message.user_not_found_message()
-    favorite_accounts = get_user_checking_accounts(favorite_id)
+    favorite_accounts = get_user_checking_accounts(favorite_id["id"])
     return Message.favorite_accounts_message(favorite_accounts)
 
 

@@ -33,6 +33,8 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1", "http://adalarf.backend24.2tapp.cc", 
 
 TELEGRAM_TOKEN = env("TELEGRAM_TOKEN")
 
+SALT = env("SALT")
+
 # Application definition
 
 INSTALLED_APPS = [

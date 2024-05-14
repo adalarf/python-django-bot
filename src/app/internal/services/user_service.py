@@ -1,6 +1,8 @@
 from app.internal.models.user import User
 from asgiref.sync import sync_to_async
 from .message_service import Message
+from config import settings
+import hashlib
 import re
 
 
@@ -20,6 +22,19 @@ def is_user_exists(user_id: int) -> bool:
 async def set_phone_from_user(user: User, user_phone_number: int) -> None:
     user.phone_number = user_phone_number
     await user.asave()
+
+
+def make_password_hashed(password: str) -> str:
+    return hashlib.sha256(password.encode() + settings.SALT.encode()).hexdigest()
+
+
+async def set_user_password(user_id: int, password: str) -> None:
+    try:
+        user = await get_user(user_id=user_id)
+        user.password = make_password_hashed(password)
+        await user.asave()
+    except User.DoesNotExist:
+        raise Message.user_not_found_message()
 
 
 async def get_user_info(user_id: int) -> list | str:
