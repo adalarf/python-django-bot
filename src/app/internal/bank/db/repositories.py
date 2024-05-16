@@ -77,14 +77,14 @@ class BankRepository(IBankRepository):
         user_account.save(update_fields=("balance",))
         favorite_account.save(update_fields=("balance",))
         transaction = Transaction.objects.create(sender_account=user_account, receiver_account=favorite_account,
-                                   money_amount=money_amount, datetime=datetime.now())
+                                                 money_amount=money_amount, datetime=datetime.now())
         if postcard:
             transaction.postcard.save(f"{transaction.id}.{postcard_type}", ContentFile(postcard))
 
     def make_transactions_viewed(self, transactions: list) -> None:
-        for transaction in transactions:
-            transaction.is_viewed = True
-            transaction.save()
+        for transaction_item in transactions:
+            transaction_item.is_viewed = True
+            transaction_item.save()
 
     def get_new_transactions(self, account_number: str) -> list:
         checking_account = CheckingAccount.objects.get(account_number=account_number)

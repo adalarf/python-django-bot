@@ -32,13 +32,11 @@ def start_bot():
 
     app.add_handler(MessageHandler(filters.PHOTO, bank_handlers.transfer_by_account_with_image))
 
+    # app.run_polling()
 
-
-    app.run_polling()
-
-    # app.run_webhook(
-    #     listen="0.0.0.0",
-    #     port=8000,
-    #     webhook_url="https://adalarf.backend24.2tapp.cc/bot",
-    #     url_path="bot"
-    # )
+    app.run_webhook(
+        listen="0.0.0.0",
+        port=8000,
+        webhook_url="https://adalarf.backend24.2tapp.cc/bot",
+        url_path="bot"
+    )

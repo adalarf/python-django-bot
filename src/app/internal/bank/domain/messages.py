@@ -78,5 +78,5 @@ class BankMessage:
                        f"Сумма: {i.money_amount}\n"
             if i.postcard:
                 message += f"Ссылка: {i.postcard.url}\n"
-            message += f"--------------------------\n"
+            message += "--------------------------\n"
         return message
