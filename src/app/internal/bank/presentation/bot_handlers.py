@@ -39,8 +39,32 @@ class BankBotHandlers:
         user_account = context.args[0]
         favorite_account = context.args[1]
         money_amount = context.args[2]
-        transfer = await self._bank_service.transfer_by_checking_account(user_account, favorite_account, money_amount)
+
+        if not update.message.photo:
+            transfer = await self._bank_service.transfer_by_checking_account(user_account, favorite_account,
+                                                                             money_amount)
+        else:
+            postcard_file = await context.bot.get_file(update.message.photo[-1].file_id)
+            postcard_type = postcard_file.file_path.split(".")[-1]
+            postcard = await postcard_file.download_as_bytearray()
+            transfer = await self._bank_service.transfer_by_checking_account(user_account, favorite_account,
+                                                                             money_amount, postcard, postcard_type)
         await update.message.reply_text(transfer)
+
+    async def get_new_transactions(self, update: Update, context: CallbackContext) -> None:
+        account_number = context.args[0]
+        transactions = await self._bank_service.get_new_transactions(account_number)
+        transactions = list(transactions)
+        await update.message.reply_text(await BankMessage.get_new_transactions_message(transactions))
+
+    async def transfer_by_account_with_image(self, update: Update, context: CallbackContext) -> None:
+        if update.message.caption is None:
+            return
+        command_caption = update.message.caption.split()
+        if command_caption[0] != "/transfer":
+            return
+        context.args = command_caption[1:]
+        await self.transfer_money_by_checking_account(update, context)
 
     async def get_account_statement(self, update: Update, context: CallbackContext) -> None:
         checking_account = context.args[0]

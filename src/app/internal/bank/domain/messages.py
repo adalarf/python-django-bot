@@ -1,3 +1,4 @@
+from asgiref.sync import sync_to_async
 from app.internal.bank.db.models import CheckingAccount, Card
 
 
@@ -63,4 +64,19 @@ class BankMessage:
                        f"Получатель: {i['receiver_account__account_number']}\n" \
                        f"Сумма: {i['money_amount']}\n" \
                        f"--------------------------\n"
+        return message
+
+    @staticmethod
+    @sync_to_async
+    def get_new_transactions_message(transactions: list):
+        message = ""
+        if not transactions:
+            return "Новых транзакций нет"
+        for i in transactions:
+            message += f"Дата: {i.datetime.strftime('%d-%m-%Y')} " \
+                       f"Получатель: {i.receiver_account.account_number}\n" \
+                       f"Сумма: {i.money_amount}\n"
+            if i.postcard:
+                message += f"Ссылка: {i.postcard.url}\n"
+            message += f"--------------------------\n"
         return message
