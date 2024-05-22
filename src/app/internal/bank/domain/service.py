@@ -41,7 +41,7 @@ class BankService:
         return BankMessage.favorite_accounts_message(favorite_accounts)
 
     @sync_to_async
-    def transfer_by_checking_account(self, user_account: str, favorite_account: str, money_amount: Decimal) -> str:
+    def transfer_by_checking_account(self, user_account: str, favorite_account: str, money_amount: Decimal, postcard: bytes = None, postcard_type: str = None) -> str:
         favorite_account = self._bank_repository.get_favorite_account(favorite_account)
         user_account = self._bank_repository.get_user_account(user_account)
         if not favorite_account or not user_account:
@@ -49,12 +49,21 @@ class BankService:
         if not self._users_service.is_favorite(user_account.owner, favorite_account.owner):
             return UsersMessage.user_is_not_favorite_message()
         else:
-            self.make_transfer(user_account, favorite_account, money_amount)
+            self.make_transfer(user_account, favorite_account, money_amount, postcard, postcard_type)
             return BankMessage.transfer_successful_message()
 
     def make_transfer(self, user_account: CheckingAccount,
-                      favorite_account: CheckingAccount, money_amount: Decimal) -> None:
-        self._bank_repository.make_transfer(user_account, favorite_account, money_amount)
+                      favorite_account: CheckingAccount, money_amount: Decimal, postcard: bytes, postcard_type: str) -> None:
+        self._bank_repository.make_transfer(user_account, favorite_account, money_amount, postcard, postcard_type)
+
+    def make_transactions_viewed(self, transactions: list) -> None:
+        self._bank_repository.make_transactions_viewed(transactions)
+
+    @sync_to_async
+    def get_new_transactions(self, account_number: str):
+        transactions = self._bank_repository.get_new_transactions(account_number)
+        self.make_transactions_viewed(transactions)
+        return transactions
 
     @sync_to_async
     def get_checking_account_statement(self, account_number: str, date_start: datetime, date_end: datetime) -> list:

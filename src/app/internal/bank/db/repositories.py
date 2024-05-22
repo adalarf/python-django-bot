@@ -1,5 +1,6 @@
 from app.internal.bank.db.models import CheckingAccount, Card, Transaction
 from app.internal.users.db.models import User
+from django.core.files.base import ContentFile
 from decimal import Decimal
 from datetime import datetime
 from django.db import transaction
@@ -30,7 +31,15 @@ class IBankRepository(abc.ABC):
 
     @abc.abstractmethod
     def make_transfer(self, user_account: CheckingAccount,
-                      favorite_account: CheckingAccount, money_amount: Decimal):
+                      favorite_account: CheckingAccount, money_amount: Decimal, postcard: bytes, path: str):
+        pass
+
+    @abc.abstractmethod
+    def make_transactions_viewed(self, transactions: list) -> None:
+        pass
+
+    @abc.abstractmethod
+    async def get_new_transactions(self, account_number: str) -> list:
         pass
 
     @abc.abstractmethod
@@ -61,13 +70,27 @@ class BankRepository(IBankRepository):
 
     @transaction.atomic
     def make_transfer(self, user_account: CheckingAccount,
-                      favorite_account: CheckingAccount, money_amount: Decimal) -> None:
+                      favorite_account: CheckingAccount, money_amount: Decimal,
+                      postcard: bytes, postcard_type: str) -> None:
         user_account.balance = F("balance") - Decimal(money_amount)
         favorite_account.balance = F("balance") + Decimal(money_amount)
         user_account.save(update_fields=("balance",))
         favorite_account.save(update_fields=("balance",))
-        Transaction.objects.create(sender_account=user_account, receiver_account=favorite_account,
-                                   money_amount=money_amount, datetime=datetime.now())
+        transaction = Transaction.objects.create(sender_account=user_account, receiver_account=favorite_account,
+                                                 money_amount=money_amount, datetime=datetime.now())
+        if postcard:
+            transaction.postcard.save(f"{transaction.id}.{postcard_type}", ContentFile(postcard))
+
+    def make_transactions_viewed(self, transactions: list) -> None:
+        for transaction_item in transactions:
+            transaction_item.is_viewed = True
+            transaction_item.save()
+
+    def get_new_transactions(self, account_number: str) -> list:
+        checking_account = CheckingAccount.objects.get(account_number=account_number)
+        transactions = Transaction.objects.filter(sender_account=checking_account,
+                                                  is_viewed=False)
+        return list(transactions)
 
     def get_checking_account_statement(self, account_number: str, date_start: datetime, date_end: datetime) -> list:
         checking_account = CheckingAccount.objects.get(account_number=account_number)

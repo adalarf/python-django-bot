@@ -1,4 +1,4 @@
-from telegram.ext import CommandHandler, ApplicationBuilder
+from telegram.ext import CommandHandler, ApplicationBuilder, MessageHandler, filters
 from app.internal.users.presentation.bot_handlers import UsersBotHandlers
 from app.internal.bank.presentation.bot_handlers import BankBotHandlers
 from app.internal.users.domain.service import UsersService, get_users_service
@@ -28,6 +28,9 @@ def start_bot():
     app.add_handler(CommandHandler("statement", bank_handlers.get_account_statement))
     app.add_handler(CommandHandler("interacted", bank_handlers.get_users_interacted_with))
     app.add_handler(CommandHandler("set_password", users_handlers.set_password))
+    app.add_handler(CommandHandler("get_new_transactions", bank_handlers.get_new_transactions))
+
+    app.add_handler(MessageHandler(filters.PHOTO, bank_handlers.transfer_by_account_with_image))
 
     # app.run_polling()
 
